@@ -17,12 +17,18 @@ def get_pack_path(pack_name):
     return f"{working_dir}/packs/{pack_name}"
 
 
+def get_logs_path(pack_name):
+    return f"{working_dir}/logs/{pack_name}"
+
+
 def create_pack(pack_name, repo):
     pack_path = get_pack_path(pack_name)
+    logs_path = get_logs_path(pack_name)
 
     # insures the pack directory is properly created
     try:
         os.makedirs(pack_path)
+        os.makedirs(logs_path)
     except FileExistsError:
         print(f"Pack {pack_name} already exists")
         return
@@ -66,24 +72,28 @@ def get_proc_config(pack_name):  # TODO: Check for import key and merge configs 
         return yaml.load(f, Loader=yaml.BaseLoader)
 
 
+def get_pack_procs(pack_name):
+    proc_config = get_proc_config(pack_name)
+    return [command[1:command.find(")")] for command in proc_config["startup"] if command[:1] == "("]
+
+
 def start_pack(pack_name):
     pack_path = get_pack_path(pack_name)
     proc_config = get_proc_config(pack_name)
+    logs_path = get_logs_path(pack_name)
 
     def exec_command(command):
         if command[:1] == "(":  # Handles for when there is a background task described
             proc_name = command[1:command.find(")")]
             stripped_command = command[len(proc_name)+2:]
-            command = f"nohup bash -c \"exec -a temi:pack:{pack_name}:{proc_name} {stripped_command}\" > log:{proc_name}.out &"
+            command = f"nohup bash -c \"exec -a temi:pack:{pack_name}:{proc_name} {stripped_command}\" > {logs_path}/{proc_name}.out &"
         os.system(f"cd {pack_path} && {command}")
 
     if "startup" in proc_config:
         print("running startup tasks")
-        os.system(f"cd {pack_path}")
         for command in proc_config["startup"]:
             print(f"running {command}")
             exec_command(command)
-        os.system("cd ~/")
 
 
 def stop_pack(pack_name):
@@ -92,7 +102,8 @@ def stop_pack(pack_name):
 
 def delete_pack(pack_name):
     pack_path = get_pack_path(pack_name)
-    os.system(f"rm -rf {pack_path}")
+    logs_path = get_logs_path(pack_name)
+    os.system(f"rm -rf {pack_path} {logs_path}")
 
 
 # TODO: Find a more sophisticated way of processing user inputs that auto generates help commands
@@ -139,9 +150,10 @@ while True:
 
     elif command == "logs":  # not working
         pack_name = args[1]
-        pack_path = get_pack_path(pack_name)
+        logs_path = get_logs_path(pack_name)
+        proc_flags = [f"-f {process_name}.out" for process_name in get_pack_procs(pack_name)]
         print(f"tailing logs for {pack_name}, use ctrl+c to exit")
-        os.system(f"tail -f {pack_path}/nohup.out")
+        os.system(f"cd {logs_path} && tail {' ; '.join(proc_flags)}")
 
     elif command == "list":  # working
         packs = ", ".join(get_packs())
