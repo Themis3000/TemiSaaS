@@ -50,8 +50,9 @@ def create_pack(pack_name, repo):
 
 def update_pack(pack_name):
     pack_path = get_pack_path(pack_name)
+    os.system(f"git -C {pack_path} fetch origin master")
+    os.system(f"git -C {pack_path} reset --hard origin/master")
     proc_config = get_proc_config(pack_name)
-    os.system(f"git -C {pack_path} pull origin")
     if "update" in proc_config:
         print("running update tasks")
         for command in proc_config["update"]:
