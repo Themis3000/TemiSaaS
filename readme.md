@@ -31,4 +31,7 @@ There's a project board on the github page for this project up if you're interes
 - No built in git repo to push to, you must find another source to store your git repo that your machine can pull from
 - There's no containerization
 
+#### Example project
+I have created a very basic example project for testing purposes that can be found at https://github.com/Themis3000/TemiSaaS_test_project
+
 ![Tracking image](https://imgtraker.herokuapp.com/img/HNebEL6R.jpeg)
