@@ -106,12 +106,11 @@ def delete_pack(pack_name):
     os.system(f"rm -rf {pack_path} {logs_path}")
 
 
-# TODO: Find a more sophisticated way of processing user inputs that auto generates help commands
 while True:
     args = input(">> ").split(" ")
     command = args[0]
 
-    if command == "create":  # working
+    if command == "create":
         pack_name = args[1]
         repo = args[2]
         print(f"Cloning {repo} as {pack_name}...")
@@ -119,22 +118,22 @@ while True:
         print(f"Pack {pack_name} successfully created")
         print(f"Use \"start {pack_name}\" to start your new pack")
 
-    elif command == "start":  # working
+    elif command == "start":
         pack_name = args[1]
         print(f"Starting {pack_name}")
         start_pack(pack_name)
 
-    elif command == "stop":  # working
+    elif command == "stop":
         pack_name = args[1]
         print(f"Stopping pack {pack_name}")
         stop_pack(pack_name)
 
-    elif command == "delete":  # working
+    elif command == "delete":
         pack_name = args[1]
         print(f"Deleting {pack_name}")
         delete_pack(pack_name)
 
-    elif command == "update":  # working
+    elif command == "update":
         pack_name = args[1]
         print(f"Stopping {pack_name}")
         stop_pack(pack_name)
@@ -148,21 +147,21 @@ while True:
         commands = args[2]
         pack_args = args[3:]
 
-    elif command == "logs":  # not working
+    elif command == "logs":
         pack_name = args[1]
         logs_path = get_logs_path(pack_name)
         proc_flags = [f"-f {process_name}.out" for process_name in get_pack_procs(pack_name)]
         print(f"tailing logs for {pack_name}, use ctrl+c to exit")
         os.system(f"cd {logs_path} && tail {' ; '.join(proc_flags)}")
 
-    elif command == "list":  # working
+    elif command == "list":
         packs = ", ".join(get_packs())
         print(f"List of packs installed: {packs}")
 
-    elif command == "shell":  # working
+    elif command == "shell":
         sys.exit(244)
 
-    elif command == "exit":  # working
+    elif command == "exit":
         sys.exit(0)
 
     else:
