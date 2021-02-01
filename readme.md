@@ -1,14 +1,10 @@
-#TemiSaaS
+# TemiSaaS
 Other open source SaaS software out there are getting a rouse out of Temi, and they're foolish enough to think that they can make something that suits their needs better. Heavily inspired by Piku
 
-#### What is Temi's needs?
+#### Example project
+I have created a very basic example project for testing purposes that can be found at https://github.com/Themis3000/TemiSaaS_test_project
 
-Temi demands of the following features out of their new created SaaS:
-
-- Meant to be run off of a raspberry pi
-- Minimal setup needed
-- Extremely lightweight
-- No interference with existing setup
+See a demo video of deploying an example project in TemiSaaS here: https://youtu.be/iqFuQqsXDtk
 
 #### What does the progress look like right now?
 Currently the deploy script is unmade, after I finish implementing enough commands to that this program is fully functional as intended I will create a deployment script
@@ -30,8 +26,5 @@ There's a project board on the github page for this project up if you're interes
 - No built in nginx configuration (not built with web applications in mind)
 - No built in git repo to push to, you must find another source to store your git repo that your machine can pull from
 - There's no containerization
-
-#### Example project
-I have created a very basic example project for testing purposes that can be found at https://github.com/Themis3000/TemiSaaS_test_project
 
 ![Tracking image](https://imgtraker.herokuapp.com/img/HNebEL6R.jpeg)
