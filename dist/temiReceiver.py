@@ -5,7 +5,7 @@ import os
 import yaml
 
 # Directory where all files created and managed stay. Nothing is affected outside this path
-working_dir = "./temi"
+working_dir = os.path.expanduser("~/temi")
 
 
 def get_packs():
@@ -42,14 +42,21 @@ def create_pack(pack_name, repo):
         commands += proc_config["update"]
 
     if len(commands) > 0:
-        for command in proc_config["update"]:
+        print("running init and update tasks")
+        for command in commands:
             print(f"running {command}")
             os.system(f"cd {pack_path} && {command}")
 
 
 def update_pack(pack_name):
     pack_path = get_pack_path(pack_name)
+    proc_config = get_proc_config(pack_name)
     os.system(f"git -C {pack_path} pull origin")
+    if "update" in proc_config:
+        print("running update tasks")
+        for command in proc_config["update"]:
+            print(f"running {command}")
+            os.system(f"cd {pack_path} && {command}")
 
 
 def get_proc_config(pack_name):  # TODO: Check for import key and merge configs before returning
@@ -115,12 +122,13 @@ while True:
         print(f"Deleting {pack_name}")
         delete_pack(pack_name)
 
-    elif command == "update":  # partially working
+    elif command == "update":  # working
         pack_name = args[1]
+        print(f"Stopping {pack_name}")
+        stop_pack(pack_name)
         print(f"Pulling latest changes for {pack_name}")
         update_pack(pack_name)
-        print(f"Restarting {pack_name}")
-        stop_pack(pack_name)
+        print(f"Starting {pack_name}")
         start_pack(pack_name)
 
     elif command == "command":  # not working
