@@ -1,0 +1,32 @@
+# This file is completely comprised of pseudo-code. This will be updated to real code later
+
+# Runs a procfile from profileExtensions before running the current one
+imports:
+  - pythonVirtualEnv.yml
+
+# Shell commands only to be run at the initialization (before the first time you run) a pack
+init:
+  - npm virt init
+
+# Shell commands only to be run when you pull a new update
+update:
+  - npm install
+
+# Shell commands to be run at every single startup
+startup:
+  - (background) npm start
+
+# Commands that can be executed over ssh with command {pack} {command}
+commands:
+  - envVarSet:
+      args:
+        - key
+        - value
+      steps:
+        - echo set {key} to {value}
+
+  - envVarRemove:
+      args:
+        - key
+      steps:
+        - echo removed {key}
