@@ -34,4 +34,6 @@ There's a project board on the github page for this project up if you're interes
 #### Example project
 I have created a very basic example project for testing purposes that can be found at https://github.com/Themis3000/TemiSaaS_test_project
 
+See a demo video of deploying the example project in TemiSaaS here: https://youtu.be/iqFuQqsXDtk
+
 ![Tracking image](https://imgtraker.herokuapp.com/img/HNebEL6R.jpeg)
