@@ -29,6 +29,8 @@ def create_pack(pack_name, repo):
     try:
         os.makedirs(pack_path)
         os.makedirs(logs_path)
+        with open(f"{working_dir}/packs/{pack_name}.yml", "w") as f:
+            yaml.dump({"autostart": True}, f)
     except FileExistsError:
         print(f"Pack {pack_name} already exists")
         return
@@ -103,66 +105,67 @@ def stop_pack(pack_name):
 def delete_pack(pack_name):
     pack_path = get_pack_path(pack_name)
     logs_path = get_logs_path(pack_name)
-    os.system(f"rm -rf {pack_path} {logs_path}")
+    os.system(f"rm -rf {pack_path} {logs_path} {working_dir}/packs/{pack_name}.yml")
 
 
-while True:
-    args = input(">> ").split(" ")
-    command = args[0]
+if __name__ == "__main__":
+    while True:
+        args = input(">> ").split(" ")
+        command = args[0]
 
-    if command == "create":
-        pack_name = args[1]
-        repo = args[2]
-        print(f"Cloning {repo} as {pack_name}...")
-        create_pack(pack_name, repo)
-        print(f"Pack {pack_name} successfully created")
-        print(f"Use \"start {pack_name}\" to start your new pack")
+        if command == "create":
+            pack_name = args[1]
+            repo = args[2]
+            print(f"Cloning {repo} as {pack_name}...")
+            create_pack(pack_name, repo)
+            print(f"Pack {pack_name} successfully created")
+            print(f"Use \"start {pack_name}\" to start your new pack")
 
-    elif command == "start":
-        pack_name = args[1]
-        print(f"Starting {pack_name}")
-        start_pack(pack_name)
+        elif command == "start":
+            pack_name = args[1]
+            print(f"Starting {pack_name}")
+            start_pack(pack_name)
 
-    elif command == "stop":
-        pack_name = args[1]
-        print(f"Stopping pack {pack_name}")
-        stop_pack(pack_name)
+        elif command == "stop":
+            pack_name = args[1]
+            print(f"Stopping pack {pack_name}")
+            stop_pack(pack_name)
 
-    elif command == "delete":
-        pack_name = args[1]
-        print(f"Deleting {pack_name}")
-        delete_pack(pack_name)
+        elif command == "delete":
+            pack_name = args[1]
+            print(f"Deleting {pack_name}")
+            delete_pack(pack_name)
 
-    elif command == "update":
-        pack_name = args[1]
-        print(f"Stopping {pack_name}")
-        stop_pack(pack_name)
-        print(f"Pulling latest changes for {pack_name}")
-        update_pack(pack_name)
-        print(f"Starting {pack_name}")
-        start_pack(pack_name)
+        elif command == "update":
+            pack_name = args[1]
+            print(f"Stopping {pack_name}")
+            stop_pack(pack_name)
+            print(f"Pulling latest changes for {pack_name}")
+            update_pack(pack_name)
+            print(f"Starting {pack_name}")
+            start_pack(pack_name)
 
-    elif command == "command":  # not working
-        pack_name = args[1]
-        commands = args[2]
-        pack_args = args[3:]
+        elif command == "command":  # not working
+            pack_name = args[1]
+            commands = args[2]
+            pack_args = args[3:]
 
-    elif command == "logs":
-        pack_name = args[1]
-        logs_path = get_logs_path(pack_name)
-        proc_flags = [f"-f {process_name}.out" for process_name in get_pack_procs(pack_name)]
-        print(f"tailing logs for {pack_name}, use ctrl+c to exit")
-        os.system(f"cd {logs_path} && tail {' ; '.join(proc_flags)}")
+        elif command == "logs":
+            pack_name = args[1]
+            logs_path = get_logs_path(pack_name)
+            proc_flags = [f"-f {process_name}.out" for process_name in get_pack_procs(pack_name)]
+            print(f"tailing logs for {pack_name}, use ctrl+c to exit")
+            os.system(f"cd {logs_path} && tail {' ; '.join(proc_flags)}")
 
-    elif command == "list":
-        packs = ", ".join(get_packs())
-        print(f"List of packs installed: {packs}")
+        elif command == "list":
+            packs = ", ".join(get_packs())
+            print(f"List of packs installed: {packs}")
 
-    elif command == "shell":
-        sys.exit(244)
+        elif command == "shell":
+            sys.exit(244)
 
-    elif command == "exit":
-        sys.exit(0)
+        elif command == "exit":
+            sys.exit(0)
 
-    else:
-        print("unrecognised command")
+        else:
+            print("unrecognised command")

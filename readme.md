@@ -26,5 +26,6 @@ There's a project board on the github page for this project up if you're interes
 - No built in nginx configuration (not built with web applications in mind)
 - No built in git repo to push to, you must find another source to store your git repo that your machine can pull from
 - There's no containerization
+- It's sort've hacked together
 
 ![Tracking image](https://imgtraker.herokuapp.com/img/HNebEL6R.jpeg)
