@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from .temiReceiver import start_pack, working_dir, get_packs
+from temiReceiver import start_pack, working_dir, get_packs
 import yaml
 
 
