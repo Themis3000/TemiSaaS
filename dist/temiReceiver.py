@@ -6,6 +6,7 @@ import yaml
 
 # Directory where all files created and managed stay. Nothing is affected outside this path
 working_dir = os.path.expanduser("~/temi")
+imports_dir = os.path.expanduser("~/procfileExtensions")
 
 
 def get_packs():
@@ -68,10 +69,25 @@ def update_pack(pack_name):
             os.system(f"cd {pack_path} && {command}")
 
 
+def get_config(config_path, ignore_imports=None):
+    if ignore_imports is None:
+        ignore_imports = []
+
+    with open(config_path, "r") as f:
+        config = yaml.load(f, Loader=yaml.BaseLoader)
+        if config.get("imports") is not None:
+            for config_import in config["imports"]:
+                if config_import not in ignore_imports:
+                    ignore_imports.extend(config["imports"])
+                    config_import, pack_imports = get_config(f"{imports_dir}/{config_import}", ignore_imports)
+                    config = {**config, **config_import}
+        return config, ignore_imports
+
+
 def get_proc_config(pack_name):  # TODO: Check for import key and merge configs before returning
     pack_path = get_pack_path(pack_name)
-    with open(f"{pack_path}/Procfile.yml", "r") as f:
-        return yaml.load(f, Loader=yaml.BaseLoader)
+    config, pack_imports = get_config(f"{pack_path}/Procfile.yml")
+    return config
 
 
 def get_pack_procs(pack_name):
