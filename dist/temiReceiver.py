@@ -90,6 +90,32 @@ def get_proc_config(pack_name):
     return config
 
 
+def config_command(pack, command, args):
+    config = get_proc_config(pack)
+
+    if "commands" not in config:
+        print("There are no commands in that pack")
+        return
+
+    if command not in config["commands"]:
+        print(f"Command {command} does not exist")
+        return
+
+    command_dict = config["commands"][command]
+
+    # creates a dictionary mapping out argument name with inputted argument
+    args_dict = {}
+    for i, arg in enumerate(args):
+        arg_name = command_dict["args"][i]
+        args_dict[arg_name] = arg
+
+    for step in command_dict["steps"]:
+        # Inserts args into command templates
+        for arg, value in args_dict.items():
+            step = step.replace("{" + arg + "}", value)
+        os.system(step)
+
+
 def get_pack_procs(pack_name):
     proc_config = get_proc_config(pack_name)
     return [command[1:command.find(")")] for command in proc_config["startup"] if command[:1] == "("]
@@ -163,8 +189,9 @@ if __name__ == "__main__":
 
         elif command == "command":  # not working
             pack_name = args[1]
-            commands = args[2]
+            pack_command = args[2]
             pack_args = args[3:]
+            config_command(pack_name, pack_command, pack_args)
 
         elif command == "logs":
             pack_name = args[1]

@@ -1,12 +1,12 @@
 commands:
-  - envVarSet:
+  envVarSet:
       args:
         - key
         - value
       steps:
         - echo set {key} to {value}
 
-  - envVarRemove:
+  envVarRemove:
       args:
         - key
       steps:
