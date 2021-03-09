@@ -84,7 +84,7 @@ def get_config(config_path, ignore_imports=None):
         return config, ignore_imports
 
 
-def get_proc_config(pack_name):  # TODO: Check for import key and merge configs before returning
+def get_proc_config(pack_name):
     pack_path = get_pack_path(pack_name)
     config, pack_imports = get_config(f"{pack_path}/Procfile.yml")
     return config
